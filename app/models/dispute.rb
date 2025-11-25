@@ -14,5 +14,21 @@ class Dispute < ApplicationRecord
   validates :amount_cents, presence: true, numericality: { greater_than: 0 }
   validates :currency, presence: true, inclusion: { in: %w[USD] }
   validates :opened_at, presence: true
-end
 
+  def transition_to(new_status, actor:, note: nil, details: {})
+    return false unless valid_transition?(new_status)
+
+    old_status = status
+    update(status: new_status)
+    true
+  end
+
+  def valid_transition?(new_status)
+    case status
+    when "open"
+      ["needs_evidence", "awaiting_decision"].include?(new_status)
+    else
+      false
+    end
+  end
+end
