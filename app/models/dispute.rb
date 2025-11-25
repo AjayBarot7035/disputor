@@ -19,6 +19,7 @@ class Dispute < ApplicationRecord
     return false unless valid_transition?(new_status)
 
     old_status = status
+    self.closed_at = Time.current if ["won", "lost"].include?(new_status)
     update(status: new_status)
     true
   end
