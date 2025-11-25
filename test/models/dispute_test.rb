@@ -76,5 +76,38 @@ class DisputeTest < ActiveSupport::TestCase
     assert result
     assert dispute.needs_evidence?
   end
+
+  test "should transition from needs_evidence to awaiting_decision" do
+    charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
+    user = User.create!(email: "admin@example.com", password: "password123", role: :admin)
+    dispute = Dispute.create!(charge: charge, external_id: "dsp_123", amount_cents: 1000, currency: "USD", opened_at: Time.current, status: "needs_evidence")
+    
+    result = dispute.transition_to("awaiting_decision", actor: user, note: "Evidence collected")
+    
+    assert result
+    assert dispute.awaiting_decision?
+  end
+
+  test "should transition from awaiting_decision to won" do
+    charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
+    user = User.create!(email: "admin@example.com", password: "password123", role: :admin)
+    dispute = Dispute.create!(charge: charge, external_id: "dsp_123", amount_cents: 1000, currency: "USD", opened_at: Time.current, status: "awaiting_decision")
+    
+    result = dispute.transition_to("won", actor: user, note: "Dispute won")
+    
+    assert result
+    assert dispute.won?
+  end
+
+  test "should transition from awaiting_decision to lost" do
+    charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
+    user = User.create!(email: "admin@example.com", password: "password123", role: :admin)
+    dispute = Dispute.create!(charge: charge, external_id: "dsp_123", amount_cents: 1000, currency: "USD", opened_at: Time.current, status: "awaiting_decision")
+    
+    result = dispute.transition_to("lost", actor: user, note: "Dispute lost")
+    
+    assert result
+    assert dispute.lost?
+  end
 end
 
