@@ -58,5 +58,12 @@ class DisputeTest < ActiveSupport::TestCase
     assert_not dispute.valid?
     assert_includes dispute.errors[:currency], "is not included in the list"
   end
+
+  test "should require opened_at" do
+    charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
+    dispute = Dispute.new(charge: charge, external_id: "dsp_123", amount_cents: 1000, currency: "USD", opened_at: nil)
+    assert_not dispute.valid?
+    assert_includes dispute.errors[:opened_at], "can't be blank"
+  end
 end
 
