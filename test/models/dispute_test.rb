@@ -24,5 +24,11 @@ class DisputeTest < ActiveSupport::TestCase
     assert_not dispute.valid?
     assert_includes dispute.errors[:external_id], "has already been taken"
   end
+
+  test "should have default status of open" do
+    charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
+    dispute = Dispute.create!(charge: charge, external_id: "dsp_123", amount_cents: 1000, currency: "USD")
+    assert dispute.open?
+  end
 end
 
