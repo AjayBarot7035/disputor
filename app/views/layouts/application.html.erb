@@ -28,6 +28,10 @@
         <%= link_to "Dispute Review Queue", root_path %>
         <% if signed_in? %>
           <span> | </span>
+          <%= link_to "Daily Volume", reports_daily_volume_path %>
+          <span> | </span>
+          <%= link_to "Time To Decision", reports_time_to_decision_path %>
+          <span> | </span>
           <span>Signed in as <%= current_user.email %> (<%= current_user.role %>)</span>
           <span> | </span>
           <%= link_to "Sign Out", session_path(current_user), data: { turbo_method: :delete } %>

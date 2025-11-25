@@ -26,6 +26,10 @@ Rails.application.routes.draw do
     resources :evidences, only: [:create]
   end
 
+  # Reports routes
+  get "reports/daily_volume", to: "reports#daily_volume", as: :reports_daily_volume
+  get "reports/time_to_decision", to: "reports#time_to_decision", as: :reports_time_to_decision
+
   # Defines the root path route ("/")
   root "disputes#index"
 end

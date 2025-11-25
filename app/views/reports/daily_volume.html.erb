@@ -1,0 +1,41 @@
+<h1>Daily Dispute Volume</h1>
+
+<%= form_with url: reports_daily_volume_path, method: :get, local: true do |form| %>
+  <div>
+    <%= form.label :from, "From Date" %>
+    <%= form.date_field :from, value: params[:from] || 30.days.ago.strftime("%Y-%m-%d") %>
+  </div>
+
+  <div>
+    <%= form.label :to, "To Date" %>
+    <%= form.date_field :to, value: params[:to] || Time.current.strftime("%Y-%m-%d") %>
+  </div>
+
+  <div>
+    <%= form.submit "Filter" %>
+  </div>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Count</th>
+      <th>Total Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @daily_data.each do |data| %>
+      <tr>
+        <td><%= data[:date] %></td>
+        <td><%= data[:count] %></td>
+        <td><%= number_to_currency(data[:total_amount_cents] / 100.0) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p>
+  <%= link_to "Download JSON", reports_daily_volume_path(format: :json, from: params[:from], to: params[:to]) %>
+</p>
+
