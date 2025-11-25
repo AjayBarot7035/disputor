@@ -9,5 +9,12 @@ class UserTest < ActiveSupport::TestCase
     assert_not user.valid?
     assert_includes user.errors[:email], "can't be blank"
   end
+
+  test "should require unique email" do
+    User.create!(email: "test@example.com")
+    user = User.new(email: "test@example.com")
+    assert_not user.valid?
+    assert_includes user.errors[:email], "has already been taken"
+  end
 end
 
