@@ -120,5 +120,25 @@ class DisputeTest < ActiveSupport::TestCase
     assert_not result
     assert dispute.open?
   end
+
+  test "should set closed_at when transitioning to won" do
+    charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
+    user = User.create!(email: "admin@example.com", password: "password123", role: :admin)
+    dispute = Dispute.create!(charge: charge, external_id: "dsp_123", amount_cents: 1000, currency: "USD", opened_at: Time.current, status: "awaiting_decision")
+    
+    dispute.transition_to("won", actor: user, note: "Dispute won")
+    
+    assert_not_nil dispute.closed_at
+  end
+
+  test "should set closed_at when transitioning to lost" do
+    charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
+    user = User.create!(email: "admin@example.com", password: "password123", role: :admin)
+    dispute = Dispute.create!(charge: charge, external_id: "dsp_123", amount_cents: 1000, currency: "USD", opened_at: Time.current, status: "awaiting_decision")
+    
+    dispute.transition_to("lost", actor: user, note: "Dispute lost")
+    
+    assert_not_nil dispute.closed_at
+  end
 end
 
