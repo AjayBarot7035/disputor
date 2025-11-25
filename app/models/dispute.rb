@@ -27,6 +27,10 @@ class Dispute < ApplicationRecord
     case status
     when "open"
       ["needs_evidence", "awaiting_decision"].include?(new_status)
+    when "needs_evidence"
+      ["awaiting_decision", "open"].include?(new_status)
+    when "awaiting_decision"
+      ["won", "lost"].include?(new_status)
     else
       false
     end
