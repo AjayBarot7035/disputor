@@ -65,5 +65,16 @@ class DisputeTest < ActiveSupport::TestCase
     assert_not dispute.valid?
     assert_includes dispute.errors[:opened_at], "can't be blank"
   end
+
+  test "should transition from open to needs_evidence" do
+    charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
+    user = User.create!(email: "admin@example.com", password: "password123", role: :admin)
+    dispute = Dispute.create!(charge: charge, external_id: "dsp_123", amount_cents: 1000, currency: "USD", opened_at: Time.current)
+    
+    result = dispute.transition_to("needs_evidence", actor: user, note: "Need more evidence")
+    
+    assert result
+    assert dispute.needs_evidence?
+  end
 end
 
