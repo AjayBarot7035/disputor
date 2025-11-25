@@ -109,5 +109,16 @@ class DisputeTest < ActiveSupport::TestCase
     assert result
     assert dispute.lost?
   end
+
+  test "should reject invalid transition from open to won" do
+    charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
+    user = User.create!(email: "admin@example.com", password: "password123", role: :admin)
+    dispute = Dispute.create!(charge: charge, external_id: "dsp_123", amount_cents: 1000, currency: "USD", opened_at: Time.current)
+    
+    result = dispute.transition_to("won", actor: user, note: "Invalid transition")
+    
+    assert_not result
+    assert dispute.open?
+  end
 end
 
