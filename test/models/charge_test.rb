@@ -30,7 +30,7 @@ class ChargeTest < ActiveSupport::TestCase
   end
 
   test "should require currency" do
-    charge = Charge.new(external_id: "chg_123", amount_cents: 1000)
+    charge = Charge.new(external_id: "chg_123", amount_cents: 1000, currency: nil)
     assert_not charge.valid?
     assert_includes charge.errors[:currency], "can't be blank"
   end
