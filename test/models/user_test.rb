@@ -11,8 +11,8 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "should require unique email" do
-    User.create!(email: "test@example.com")
-    user = User.new(email: "test@example.com")
+    User.create!(email: "test@example.com", password: "password123")
+    user = User.new(email: "test@example.com", password: "password123")
     assert_not user.valid?
     assert_includes user.errors[:email], "has already been taken"
   end
