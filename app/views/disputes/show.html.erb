@@ -11,37 +11,60 @@
 </div>
 
 <h2>Status Transition</h2>
-<%= form_with model: @dispute, local: true do |form| %>
-  <% if @dispute.errors.any? %>
+<% if ["won", "lost"].include?(@dispute.status) %>
+  <h3>Reopen Dispute</h3>
+  <%= form_with url: reopen_dispute_path(@dispute), method: :post, local: true do |form| %>
     <div>
-      <ul>
-        <% @dispute.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
+      <%= form.label :justification, "Justification (required)" %>
+      <%= form.text_area :justification, rows: 3, required: true, disabled: !current_user.can_edit? %>
     </div>
+
+    <% if current_user.can_edit? %>
+      <div>
+        <%= form.submit "Reopen Dispute" %>
+      </div>
+    <% end %>
   <% end %>
+<% else %>
+  <%= form_with model: @dispute, local: true do |form| %>
+    <% if @dispute.errors.any? %>
+      <div>
+        <ul>
+          <% @dispute.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
 
-  <div>
-    <%= form.label :status, "New Status" %>
-    <%= form.select :status, options_for_select([
-      ["Open", "open"],
-      ["Needs Evidence", "needs_evidence"],
-      ["Awaiting Decision", "awaiting_decision"],
-      ["Won", "won"],
-      ["Lost", "lost"]
-    ], @dispute.status), {}, { disabled: !current_user.can_edit? } %>
-  </div>
-
-  <div>
-    <%= form.label :note, "Note" %>
-    <%= form.text_area :note, rows: 3, disabled: !current_user.can_edit? %>
-  </div>
-
-  <% if current_user.can_edit? %>
     <div>
-      <%= form.submit "Update Status" %>
+      <%= form.label :status, "New Status" %>
+      <% 
+        status_labels = {
+          "open" => "Open",
+          "needs_evidence" => "Needs Evidence",
+          "awaiting_decision" => "Awaiting Decision",
+          "won" => "Won",
+          "lost" => "Lost",
+          "reopened" => "Reopened"
+        }
+        valid_options = @dispute.valid_transitions.map { |s| [status_labels[s] || s.humanize, s] }
+      %>
+      <%= form.select :status, options_for_select(valid_options, @dispute.status), 
+          { prompt: "Select status..." }, 
+          { disabled: !current_user.can_edit? } %>
     </div>
+
+    <div>
+      <%= form.label :note, "Note" %>
+      <%= form.text_area :note, rows: 3, disabled: !current_user.can_edit? %>
+    </div>
+
+    <% if current_user.can_edit? %>
+      <div>
+        <%= form.submit "Update Status" %>
+      </div>
+    <% end %>
   <% end %>
 <% end %>
 

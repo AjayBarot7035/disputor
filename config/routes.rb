@@ -24,6 +24,9 @@ Rails.application.routes.draw do
   # Disputes routes
   resources :disputes, only: [:index, :show, :update] do
     resources :evidences, only: [:create]
+    member do
+      post :reopen
+    end
   end
 
   # Reports routes

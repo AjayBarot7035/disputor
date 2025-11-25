@@ -144,5 +144,24 @@ class DisputesControllerTest < ActionDispatch::IntegrationTest
     get dispute_url(dispute)
     assert_response :success
   end
+
+  test "should reopen dispute from won status" do
+    charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
+    dispute = Dispute.create!(
+      charge: charge,
+      external_id: "dsp_123",
+      amount_cents: 1000,
+      currency: "USD",
+      opened_at: Time.current,
+      status: "awaiting_decision"
+    )
+    dispute.transition_to("won", actor: @user, note: "Won")
+
+    post reopen_dispute_path(dispute), params: { justification: "New evidence found" }
+    
+    assert_redirected_to dispute_url(dispute)
+    dispute.reload
+    assert_equal "reopened", dispute.status
+  end
 end
 
