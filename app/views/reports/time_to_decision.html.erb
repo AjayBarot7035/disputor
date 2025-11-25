@@ -2,28 +2,30 @@
 
 <p>Distribution (p50/p90) of duration from dispute.opened to final won/lost, grouped by week.</p>
 
-<table>
-  <thead>
-    <tr>
-      <th>Week</th>
-      <th>Count</th>
-      <th>P50 (days)</th>
-      <th>P90 (days)</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @weekly_data.each do |data| %>
+<% if @weekly_data.empty? %>
+  <p><em>No data available. This report requires disputes that have been closed (won or lost).</em></p>
+<% else %>
+  <table>
+    <thead>
       <tr>
-        <td><%= data[:week].strftime("%Y-%m-%d") %></td>
-        <td><%= data[:count] %></td>
-        <td><%= number_with_precision(data[:p50], precision: 2) %></td>
-        <td><%= number_with_precision(data[:p90], precision: 2) %></td>
+        <th>Week</th>
+        <th>Count</th>
+        <th>P50 (days)</th>
+        <th>P90 (days)</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<p>
-  <%= link_to "Download JSON", reports_time_to_decision_path(format: :json) %>
-</p>
-
+    </thead>
+    <tbody>
+      <% @weekly_data.each do |data| %>
+        <tr>
+          <td><%= data[:week].strftime("%Y-%m-%d") %></td>
+          <td><%= data[:count] %></td>
+          <td><%= number_with_precision(data[:p50], precision: 2) %></td>
+          <td><%= number_with_precision(data[:p90], precision: 2) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <p>
+    <%= link_to "Download JSON", reports_time_to_decision_path(format: :json) %>
+  </p>
+<% end %>

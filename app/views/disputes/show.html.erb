@@ -84,27 +84,36 @@
 <% end %>
 
 <h3>Add Evidence</h3>
-<%= form_with model: [@dispute, @dispute.evidences.build], local: true, url: dispute_evidences_path(@dispute) do |form| %>
-  <div>
-    <%= form.label :kind, "Kind" %>
-    <%= form.text_field :kind %>
-  </div>
+<% if current_user.can_edit? %>
+  <%= form_with model: [@dispute, @dispute.evidences.build], local: true, url: dispute_evidences_path(@dispute) do |form| %>
+    <div>
+      <%= form.label :kind, "Evidence Type" %>
+      <%= form.select :kind, options_for_select([
+        ["Document", "document"],
+        ["Receipt", "receipt"],
+        ["Email", "email"],
+        ["Note", "note"],
+        ["Other", "other"]
+      ]), { prompt: "Select type..." }, { required: true } %>
+      <small>Category for this evidence (e.g., document, receipt, email, note)</small>
+    </div>
 
-  <div>
-    <%= form.label :file, "File" %>
-    <%= form.file_field :file %>
-  </div>
+    <div>
+      <%= form.label :file, "File" %>
+      <%= form.file_field :file %>
+    </div>
 
-  <div>
-    <%= form.label :note, "Note" %>
-    <%= form.text_area :note, rows: 3 %>
-  </div>
+    <div>
+      <%= form.label :note, "Note" %>
+      <%= form.text_area :note, rows: 3 %>
+    </div>
 
-  <% if current_user.can_edit? %>
     <div>
       <%= form.submit "Add Evidence" %>
     </div>
   <% end %>
+<% else %>
+  <p><em>Read-only users cannot add evidence. Please contact an admin or reviewer.</em></p>
 <% end %>
 
 <h2>Case Actions (Audit Trail)</h2>

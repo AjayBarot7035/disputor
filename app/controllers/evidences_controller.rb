@@ -1,5 +1,6 @@
 class EvidencesController < ApplicationController
   before_action :set_dispute
+  before_action :require_edit_permission
 
   def create
     @evidence = @dispute.evidences.build(evidence_params)
@@ -21,5 +22,11 @@ class EvidencesController < ApplicationController
 
   def evidence_params
     params.require(:evidence).permit(:kind, :file)
+  end
+
+  def require_edit_permission
+    unless current_user.can_edit?
+      redirect_to @dispute, alert: "You do not have permission to add evidence"
+    end
   end
 end

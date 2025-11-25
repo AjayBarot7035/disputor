@@ -55,4 +55,27 @@ class EvidencesControllerTest < ActionDispatch::IntegrationTest
     assert_equal "note", evidence.kind
     assert_equal "Internal note", evidence.metadata["note"]
   end
+
+  test "should not allow read_only user to add evidence" do
+    read_only_user = User.create!(
+      email: "readonly@example.com",
+      password: "password123",
+      role: :read_only,
+      time_zone: "UTC"
+    )
+    delete session_url(@user)
+    post sessions_url, params: { session: { email: read_only_user.email, password: "password123" } }
+
+    assert_no_difference "Evidence.count" do
+      post dispute_evidences_path(@dispute), params: {
+        evidence: {
+          kind: "note",
+          note: "Should not work"
+        }
+      }
+    end
+
+    assert_redirected_to dispute_path(@dispute)
+    assert_equal "You do not have permission to add evidence", flash[:alert]
+  end
 end

@@ -70,8 +70,9 @@ class ReportsControllerTest < ActionDispatch::IntegrationTest
       external_id: "dsp_123",
       amount_cents: 1000,
       currency: "USD",
-      opened_at: 1.week.ago,
-      status: "open"
+      opened_at: 10.days.ago,
+      status: "won",
+      closed_at: Time.current
     )
 
     get reports_time_to_decision_path
@@ -105,5 +106,22 @@ class ReportsControllerTest < ActionDispatch::IntegrationTest
     json = JSON.parse(response.body)
     assert json.key?("data")
     assert json["data"].is_a?(Array)
+  end
+
+  test "read_only user should be able to view reports" do
+    read_only_user = User.create!(
+      email: "readonly@example.com",
+      password: "password123",
+      role: :read_only,
+      time_zone: "UTC"
+    )
+    delete session_url(@user)
+    post sessions_url, params: { session: { email: read_only_user.email, password: "password123" } }
+
+    get reports_daily_volume_path
+    assert_response :success
+
+    get reports_time_to_decision_path
+    assert_response :success
   end
 end
