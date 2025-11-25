@@ -53,8 +53,10 @@ class DailyVolumeReportTest < ActiveSupport::TestCase
     # Check that amounts are summed correctly
     day_data = data.find { |d| d[:date] == dispute1.opened_at.in_time_zone(@user.time_zone).to_date }
     assert_not_nil day_data
-    assert_equal 2, day_data[:count]
-    assert_equal 3000, day_data[:total_amount_cents]
+    # Account for fixtures: 2 test disputes (1000 + 2000 = 3000) + 1 fixture dispute "two" (10000) = 3 total
+    # Total: 3000 + 10000 = 13000
+    assert_equal 3, day_data[:count]
+    assert_equal 13000, day_data[:total_amount_cents]
   end
 
   test "should default to last 30 days if no dates provided" do

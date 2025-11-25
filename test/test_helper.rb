@@ -8,8 +8,7 @@ module ActiveSupport
     parallelize(workers: :number_of_processors)
 
     # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
-    # Disabled for TDD approach - we'll build up from scratch
-    # fixtures :all
+    fixtures :all
 
     # Add more helper methods to be used by all tests here...
   end

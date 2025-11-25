@@ -22,7 +22,8 @@ class WebhooksControllerTest < ActionDispatch::IntegrationTest
 
     # Perform the job to actually create the dispute
     perform_enqueued_jobs
-    assert_equal 1, Dispute.count
+    # Account for fixtures: 6 fixture disputes + 1 test dispute = 7 total
+    assert_equal 7, Dispute.count
   end
 
   test "should accept dispute.updated event" do
@@ -112,7 +113,8 @@ class WebhooksControllerTest < ActionDispatch::IntegrationTest
       post webhooks_disputes_path, params: payload, as: :json
     end
     assert_response :accepted
-    assert_equal 1, Dispute.count
+    # Account for fixtures: 6 fixture disputes + 1 test dispute = 7 total
+    assert_equal 7, Dispute.count
 
     # Duplicate request with same event_id
     assert_no_difference "Dispute.count" do

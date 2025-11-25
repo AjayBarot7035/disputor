@@ -1,0 +1,22 @@
+# Evidences fixture
+one:
+  dispute: one
+  kind: document
+  metadata:
+    note: Customer receipt
+    uploaded_by: admin@disputor.local
+
+two:
+  dispute: two
+  kind: document
+  metadata:
+    note: Bank statement
+    uploaded_by: reviewer@disputor.local
+
+three:
+  dispute: three
+  kind: email
+  metadata:
+    note: Customer communication
+    uploaded_by: admin@disputor.local
+

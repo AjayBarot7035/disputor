@@ -1,0 +1,31 @@
+# Users fixture
+admin:
+  email: admin@disputor.local
+  password_digest: <%= BCrypt::Password.create('admin123') %>
+  role: admin
+  time_zone: UTC
+
+reviewer:
+  email: reviewer@disputor.local
+  password_digest: <%= BCrypt::Password.create('reviewer123') %>
+  role: reviewer
+  time_zone: UTC
+
+read_only:
+  email: readonly@disputor.local
+  password_digest: <%= BCrypt::Password.create('readonly123') %>
+  role: read_only
+  time_zone: UTC
+
+test_admin:
+  email: test_admin@example.com
+  password_digest: <%= BCrypt::Password.create('password123') %>
+  role: admin
+  time_zone: UTC
+
+test_reviewer:
+  email: test_reviewer@example.com
+  password_digest: <%= BCrypt::Password.create('password123') %>
+  role: reviewer
+  time_zone: UTC
+

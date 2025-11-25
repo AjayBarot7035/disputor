@@ -1,0 +1,16 @@
+# Charges fixture
+one:
+  external_id: chg_test_1
+  amount_cents: 5000
+  currency: USD
+
+two:
+  external_id: chg_test_2
+  amount_cents: 10000
+  currency: USD
+
+three:
+  external_id: chg_test_3
+  amount_cents: 2500
+  currency: USD
+

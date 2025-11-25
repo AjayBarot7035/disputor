@@ -1,0 +1,51 @@
+# Disputes fixture
+one:
+  charge: one
+  external_id: dsp_test_1
+  amount_cents: 5000
+  currency: USD
+  status: open
+  opened_at: <%= 3.days.ago %>
+
+two:
+  charge: two
+  external_id: dsp_test_2
+  amount_cents: 10000
+  currency: USD
+  status: needs_evidence
+  opened_at: <%= 2.days.ago %>
+
+three:
+  charge: three
+  external_id: dsp_test_3
+  amount_cents: 2500
+  currency: USD
+  status: awaiting_decision
+  opened_at: <%= 1.day.ago %>
+
+won:
+  charge: one
+  external_id: dsp_won_1
+  amount_cents: 5000
+  currency: USD
+  status: won
+  opened_at: <%= 5.days.ago %>
+  closed_at: <%= 1.day.ago %>
+
+lost:
+  charge: two
+  external_id: dsp_lost_1
+  amount_cents: 10000
+  currency: USD
+  status: lost
+  opened_at: <%= 5.days.ago %>
+  closed_at: <%= 1.day.ago %>
+
+reopened:
+  charge: three
+  external_id: dsp_reopened_1
+  amount_cents: 2500
+  currency: USD
+  status: reopened
+  opened_at: <%= 7.days.ago %>
+

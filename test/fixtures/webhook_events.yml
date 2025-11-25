@@ -1,0 +1,54 @@
+# Webhook Events fixture
+opened:
+  event_id: evt_opened_1
+  event_type: dispute.opened
+  dispute_external_id: dsp_test_1
+  payload:
+    dispute:
+      external_id: dsp_test_1
+      charge_external_id: chg_test_1
+      amount_cents: 5000
+      currency: USD
+      status: open
+      occurred_at: <%= 3.days.ago.iso8601 %>
+  processed: true
+  processed_at: <%= 3.days.ago %>
+
+updated:
+  event_id: evt_updated_1
+  event_type: dispute.updated
+  dispute_external_id: dsp_test_2
+  payload:
+    dispute:
+      external_id: dsp_test_2
+      status: needs_evidence
+      occurred_at: <%= 2.days.ago.iso8601 %>
+  processed: true
+  processed_at: <%= 2.days.ago %>
+
+closed:
+  event_id: evt_closed_1
+  event_type: dispute.closed
+  dispute_external_id: dsp_won_1
+  payload:
+    dispute:
+      external_id: dsp_won_1
+      status: won
+      occurred_at: <%= 1.day.ago.iso8601 %>
+  processed: true
+  processed_at: <%= 1.day.ago %>
+
+unprocessed:
+  event_id: evt_unprocessed_1
+  event_type: dispute.opened
+  dispute_external_id: dsp_test_3
+  payload:
+    dispute:
+      external_id: dsp_test_3
+      charge_external_id: chg_test_3
+      amount_cents: 2500
+      currency: USD
+      status: open
+      occurred_at: <%= Time.current.iso8601 %>
+  processed: false
+

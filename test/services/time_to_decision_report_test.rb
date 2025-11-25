@@ -62,7 +62,8 @@ class TimeToDecisionReportTest < ActiveSupport::TestCase
 
     week_data = data.find { |d| d[:week] == opened_at.beginning_of_week }
     assert_not_nil week_data
-    assert_equal 3, week_data[:count]
+    # Account for fixtures (won and lost disputes) + 3 test disputes = 5 total
+    assert_equal 5, week_data[:count]
     assert_not_nil week_data[:p50]
     assert_not_nil week_data[:p90]
   end

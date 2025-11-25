@@ -1,0 +1,55 @@
+# Case Actions fixture
+one:
+  dispute: one
+  actor: admin
+  action: status_transition
+  note: Initial status transition
+  details:
+    from_status: open
+    to_status: needs_evidence
+
+two:
+  dispute: two
+  actor: reviewer
+  action: status_transition
+  note: Evidence requested
+  details:
+    from_status: open
+    to_status: needs_evidence
+
+three:
+  dispute: three
+  actor: admin
+  action: status_transition
+  note: Ready for decision
+  details:
+    from_status: needs_evidence
+    to_status: awaiting_decision
+
+won_transition:
+  dispute: won
+  actor: admin
+  action: status_transition
+  note: Dispute won
+  details:
+    from_status: awaiting_decision
+    to_status: won
+
+lost_transition:
+  dispute: lost
+  actor: reviewer
+  action: status_transition
+  note: Dispute lost
+  details:
+    from_status: awaiting_decision
+    to_status: lost
+
+reopened_transition:
+  dispute: reopened
+  actor: admin
+  action: status_transition
+  note: "Dispute reopened: New evidence found"
+  details:
+    from_status: won
+    to_status: reopened
+

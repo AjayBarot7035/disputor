@@ -1,9 +1,6 @@
 require "test_helper"
 
 class WebhookEventTest < ActiveSupport::TestCase
-  # Disable fixtures for TDD
-  def self.fixtures(*args); end
-
   test "should require event_id" do
     webhook_event = WebhookEvent.new
     assert_not webhook_event.valid?
