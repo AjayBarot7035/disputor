@@ -8,5 +8,13 @@ class User < ApplicationRecord
   }
 
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
+
+  def can_edit?
+    admin? || reviewer?
+  end
+
+  def can_manage_users?
+    admin?
+  end
 end
 
