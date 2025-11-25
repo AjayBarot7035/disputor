@@ -44,5 +44,19 @@ class DisputeTest < ActiveSupport::TestCase
     assert_not dispute.valid?
     assert_includes dispute.errors[:amount_cents], "must be greater than 0"
   end
+
+  test "should require currency" do
+    charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
+    dispute = Dispute.new(charge: charge, external_id: "dsp_123", amount_cents: 1000, currency: nil)
+    assert_not dispute.valid?
+    assert_includes dispute.errors[:currency], "can't be blank"
+  end
+
+  test "should only allow USD currency" do
+    charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
+    dispute = Dispute.new(charge: charge, external_id: "dsp_123", amount_cents: 1000, currency: "EUR")
+    assert_not dispute.valid?
+    assert_includes dispute.errors[:currency], "is not included in the list"
+  end
 end
 
