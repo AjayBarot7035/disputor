@@ -38,5 +38,35 @@ class UserTest < ActiveSupport::TestCase
     user = User.create!(email: "test@example.com", password: "password123")
     assert_equal "UTC", user.time_zone
   end
+
+  test "admin? should return true for admin role" do
+    user = User.new(role: :admin)
+    assert user.admin?
+  end
+
+  test "reviewer? should return true for reviewer role" do
+    user = User.new(role: :reviewer)
+    assert user.reviewer?
+  end
+
+  test "can_edit? should return true for admin and reviewer" do
+    admin = User.new(role: :admin)
+    reviewer = User.new(role: :reviewer)
+    read_only = User.new(role: :read_only)
+
+    assert admin.can_edit?
+    assert reviewer.can_edit?
+    assert_not read_only.can_edit?
+  end
+
+  test "can_manage_users? should return true only for admin" do
+    admin = User.new(role: :admin)
+    reviewer = User.new(role: :reviewer)
+    read_only = User.new(role: :read_only)
+
+    assert admin.can_manage_users?
+    assert_not reviewer.can_manage_users?
+    assert_not read_only.can_manage_users?
+  end
 end
 
