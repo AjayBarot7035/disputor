@@ -22,5 +22,11 @@ class UserTest < ActiveSupport::TestCase
     assert_not user.valid?
     assert_includes user.errors[:email], "is invalid"
   end
+
+  test "should require password" do
+    user = User.new(email: "test@example.com")
+    assert_not user.valid?
+    assert_includes user.errors[:password], "can't be blank"
+  end
 end
 
