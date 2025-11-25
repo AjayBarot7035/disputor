@@ -30,9 +30,8 @@ brew install rbenv ruby-build
 echo 'eval "$(rbenv init - zsh)"' >> ~/.zshrc
 source ~/.zshrc
 
-# Install Ruby 3.4.0 (or latest 3.4.x)
-rbenv install 3.4.0
-rbenv global 3.4.0
+rbenv install 3.4.7
+rbenv global 3.4.7
 
 # Verify installation
 ruby -v  # Should show 3.4.x
@@ -50,8 +49,8 @@ source ~/.zshrc
 
 # Install Ruby plugin and Ruby 3.4.0
 asdf plugin add ruby
-asdf install ruby 3.4.0
-asdf global ruby 3.4.0
+asdf install ruby 3.4.7
+asdf global ruby 3.4.7
 
 # Verify installation
 ruby -v  # Should show 3.4.x
@@ -116,9 +115,6 @@ bundle install
 # Setup the database
 bin/rails db:create
 bin/rails db:migrate
-
-# (Optional) Seed initial data
-bin/rails db:seed
 ```
 
 ### 8. Configure Environment Variables
@@ -195,11 +191,9 @@ bin/rails console
 ## Quick Start Commands
 
 ```bash
-# One-time setup
+# One-time setup(To automate the setup)
 bin/setup
 
-# Start everything (if using foreman or similar)
-# Or manually:
 # Terminal 1: bin/rails server
 # Terminal 2: bundle exec sidekiq
 
@@ -217,25 +211,4 @@ bin/rails users:create[email@example.com,admin]
 brew install git
 brew install postgresql@16  # Already installed above
 brew install redis          # Already installed above
-
-# Useful gems for development (add to Gemfile)
-# - pry (better console)
-# - annotate (model annotations)
-# - rubocop (code style)
 ```
-
-## Next Steps
-
-After setup:
-1. Create initial users with different roles (admin, reviewer, read_only)
-2. Test webhook endpoint with sample script
-3. Verify state machine transitions work
-4. Test reporting pages with sample data
-```
-
-This covers the stack setup. Should I:
-1. Create a `bin/setup` script to automate these steps?
-2. Add Rails 8.x specific configuration details?
-3. Include Docker setup instructions (optional per requirements)?
-
-You can copy this into `SETUP.md` and reference it when writing your README.md.
