@@ -18,6 +18,9 @@ Rails.application.routes.draw do
   post "sessions", to: "sessions#create", as: :sessions
   delete "sessions/:id", to: "sessions#destroy", as: :session
 
+  # Webhook routes (no authentication required)
+  post "webhooks/disputes", to: "webhooks#disputes", as: :webhooks_disputes
+
   # Disputes routes
   resources :disputes, only: [:index, :show, :update] do
     resources :evidences, only: [:create]

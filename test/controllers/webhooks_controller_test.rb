@@ -4,23 +4,25 @@ class WebhooksControllerTest < ActionDispatch::IntegrationTest
   test "should accept dispute.opened event" do
     Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
     
-    assert_difference "Dispute.count", 1 do
-      assert_enqueued_with(job: ProcessWebhookEventJob) do
-        post webhooks_disputes_path, params: {
-          event_type: "dispute.opened",
-          dispute: {
-            external_id: "dsp_123",
-            charge_external_id: "chg_123",
-            amount_cents: 1000,
-            currency: "USD",
-            status: "open",
-            occurred_at: Time.current.iso8601
-          }
-        }, as: :json
-      end
+    assert_enqueued_with(job: ProcessWebhookEventJob) do
+      post webhooks_disputes_path, params: {
+        event_type: "dispute.opened",
+        dispute: {
+          external_id: "dsp_123",
+          charge_external_id: "chg_123",
+          amount_cents: 1000,
+          currency: "USD",
+          status: "open",
+          occurred_at: Time.current.iso8601
+        }
+      }, as: :json
     end
 
     assert_response :accepted
+    
+    # Perform the job to actually create the dispute
+    perform_enqueued_jobs
+    assert_equal 1, Dispute.count
   end
 
   test "should accept dispute.updated event" do
@@ -86,6 +88,38 @@ class WebhooksControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :unprocessable_entity
+  end
+
+  test "should handle duplicate events idempotently" do
+    Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
+    event_id = "evt_123"
+    
+    payload = {
+      event_id: event_id,
+      event_type: "dispute.opened",
+      dispute: {
+        external_id: "dsp_123",
+        charge_external_id: "chg_123",
+        amount_cents: 1000,
+        currency: "USD",
+        status: "open",
+        occurred_at: Time.current.iso8601
+      }
+    }
+
+    # First request
+    perform_enqueued_jobs do
+      post webhooks_disputes_path, params: payload, as: :json
+    end
+    assert_response :accepted
+    assert_equal 1, Dispute.count
+
+    # Duplicate request with same event_id
+    assert_no_difference "Dispute.count" do
+      post webhooks_disputes_path, params: payload, as: :json
+    end
+    assert_response :ok
+    assert_equal "Event already processed", JSON.parse(response.body)["message"]
   end
 end
 

@@ -99,6 +99,20 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_25_080731) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  create_table "webhook_events", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "dispute_external_id"
+    t.string "event_id", null: false
+    t.string "event_type", null: false
+    t.jsonb "payload", default: {}
+    t.boolean "processed", default: false, null: false
+    t.datetime "processed_at"
+    t.datetime "updated_at", null: false
+    t.index ["dispute_external_id"], name: "index_webhook_events_on_dispute_external_id"
+    t.index ["event_id"], name: "index_webhook_events_on_event_id", unique: true
+    t.index ["processed"], name: "index_webhook_events_on_processed"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "case_actions", "disputes"
