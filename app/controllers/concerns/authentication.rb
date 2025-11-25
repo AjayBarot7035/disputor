@@ -22,4 +22,3 @@ module Authentication
     end
   end
 end
-

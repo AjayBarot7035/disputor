@@ -5,4 +5,3 @@ class WebhookEvent < ApplicationRecord
   scope :processed, -> { where(processed: true) }
   scope :unprocessed, -> { where(processed: false) }
 end
-

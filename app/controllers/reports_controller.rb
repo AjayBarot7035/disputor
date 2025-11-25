@@ -2,7 +2,7 @@ class ReportsController < ApplicationController
   def daily_volume
     from_date = parse_date(params[:from])
     to_date = parse_date(params[:to])
-    
+
     report = DailyVolumeReport.new(current_user, from_date, to_date)
     @daily_data = report.generate
 

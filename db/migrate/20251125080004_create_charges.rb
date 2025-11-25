@@ -10,4 +10,3 @@ class CreateCharges < ActiveRecord::Migration[8.1]
     add_index :charges, :external_id, unique: true
   end
 end
-

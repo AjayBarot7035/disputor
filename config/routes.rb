@@ -22,8 +22,8 @@ Rails.application.routes.draw do
   post "webhooks/disputes", to: "webhooks#disputes", as: :webhooks_disputes
 
   # Disputes routes
-  resources :disputes, only: [:index, :show, :update] do
-    resources :evidences, only: [:create]
+  resources :disputes, only: [ :index, :show, :update ] do
+    resources :evidences, only: [ :create ]
     member do
       post :reopen
     end

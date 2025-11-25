@@ -9,7 +9,7 @@ class EvidencesControllerTest < ActionDispatch::IntegrationTest
       time_zone: "UTC"
     )
     post sessions_url, params: { session: { email: @user.email, password: "password123" } }
-    
+
     @charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
     @dispute = Dispute.create!(
       charge: @charge,
@@ -22,7 +22,7 @@ class EvidencesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create evidence with file" do
     file = fixture_file_upload("test/fixtures/files/sample.txt", "text/plain")
-    
+
     assert_difference "Evidence.count", 1 do
       post dispute_evidences_path(@dispute), params: {
         evidence: {
@@ -56,4 +56,3 @@ class EvidencesControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Internal note", evidence.metadata["note"]
   end
 end
-

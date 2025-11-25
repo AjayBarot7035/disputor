@@ -3,4 +3,3 @@ class AddRoleToUsers < ActiveRecord::Migration[8.1]
     add_column :users, :role, :integer, null: false, default: 2
   end
 end
-

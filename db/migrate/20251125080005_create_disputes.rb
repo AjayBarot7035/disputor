@@ -17,4 +17,3 @@ class CreateDisputes < ActiveRecord::Migration[8.1]
     add_index :disputes, :opened_at
   end
 end
-

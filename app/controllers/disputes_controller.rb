@@ -1,5 +1,5 @@
 class DisputesController < ApplicationController
-  before_action :set_dispute, only: [:show, :update, :reopen]
+  before_action :set_dispute, only: [ :show, :update, :reopen ]
 
   def index
     @disputes = Dispute.includes(:charge).order(created_at: :desc)

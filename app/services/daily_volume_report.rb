@@ -14,7 +14,7 @@ class DailyVolumeReport
 
     # Group disputes by day in user's time zone
     disputes = Dispute.where(opened_at: from..to)
-    
+
     disputes.group_by { |d| d.opened_at.in_time_zone(user.time_zone).to_date }
       .map do |date, day_disputes|
         {
@@ -30,4 +30,3 @@ class DailyVolumeReport
     generate.map { |d| d.merge(date: d[:date].iso8601, total_amount: d[:total_amount_cents] / 100.0) }
   end
 end
-

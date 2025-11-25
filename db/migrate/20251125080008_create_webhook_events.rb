@@ -16,4 +16,3 @@ class CreateWebhookEvents < ActiveRecord::Migration[8.1]
     add_index :webhook_events, :processed
   end
 end
-

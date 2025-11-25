@@ -27,4 +27,3 @@ class CaseActionTest < ActiveSupport::TestCase
     assert_includes case_action.errors[:action], "can't be blank"
   end
 end
-

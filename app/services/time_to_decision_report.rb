@@ -1,7 +1,7 @@
 class TimeToDecisionReport
   def generate
     # Get all closed disputes (won or lost)
-    closed_disputes = Dispute.where(status: [:won, :lost])
+    closed_disputes = Dispute.where(status: [ :won, :lost ])
       .where.not(closed_at: nil)
       .where.not(opened_at: nil)
 
@@ -21,7 +21,7 @@ class TimeToDecisionReport
         durations_only = week_durations.map { |d| d[:duration_days] }.sort
         p50 = percentile(durations_only, 50)
         p90 = percentile(durations_only, 90)
-        
+
         {
           week: week,
           count: week_durations.count,
@@ -40,12 +40,11 @@ class TimeToDecisionReport
 
   def percentile(sorted_array, percentile)
     return nil if sorted_array.empty?
-    
+
     index = (percentile / 100.0) * (sorted_array.length - 1)
     lower = sorted_array[index.floor]
     upper = sorted_array[index.ceil]
-    
+
     lower + (upper - lower) * (index - index.floor)
   end
 end
-

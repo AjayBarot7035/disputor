@@ -3,7 +3,7 @@ class WebhooksController < ApplicationController
 
   def disputes
     payload = params.to_unsafe_h.except(:controller, :action)
-    
+
     # Basic validation
     unless valid_webhook_payload?(payload)
       return render json: { error: "Invalid payload" }, status: :unprocessable_entity
@@ -11,7 +11,7 @@ class WebhooksController < ApplicationController
 
     # Generate event_id if not provided (for idempotency)
     event_id = payload[:event_id] || SecureRandom.uuid
-    
+
     # Store webhook event for idempotency
     webhook_event = WebhookEvent.find_or_initialize_by(event_id: event_id)
     if webhook_event.persisted? && webhook_event.processed?
@@ -42,4 +42,3 @@ class WebhooksController < ApplicationController
       payload.dig(:dispute, :occurred_at).present?
   end
 end
-

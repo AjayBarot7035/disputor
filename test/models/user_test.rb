@@ -69,4 +69,3 @@ class UserTest < ActiveSupport::TestCase
     assert_not read_only.can_manage_users?
   end
 end
-

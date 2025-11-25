@@ -158,10 +158,9 @@ class DisputesControllerTest < ActionDispatch::IntegrationTest
     dispute.transition_to("won", actor: @user, note: "Won")
 
     post reopen_dispute_path(dispute), params: { justification: "New evidence found" }
-    
+
     assert_redirected_to dispute_url(dispute)
     dispute.reload
     assert_equal "reopened", dispute.status
   end
 end
-

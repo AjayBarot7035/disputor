@@ -12,7 +12,7 @@ class DailyVolumeReportTest < ActiveSupport::TestCase
 
   test "should calculate daily volume for date range" do
     charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
-    
+
     # Create disputes on different days
     dispute1 = Dispute.create!(
       charge: charge,
@@ -22,7 +22,7 @@ class DailyVolumeReportTest < ActiveSupport::TestCase
       opened_at: 2.days.ago,
       status: "open"
     )
-    
+
     dispute2 = Dispute.create!(
       charge: charge,
       external_id: "dsp_2",
@@ -31,7 +31,7 @@ class DailyVolumeReportTest < ActiveSupport::TestCase
       opened_at: 2.days.ago,
       status: "open"
     )
-    
+
     dispute3 = Dispute.create!(
       charge: charge,
       external_id: "dsp_3",
@@ -49,7 +49,7 @@ class DailyVolumeReportTest < ActiveSupport::TestCase
 
     assert data.is_a?(Array)
     assert data.length >= 2
-    
+
     # Check that amounts are summed correctly
     day_data = data.find { |d| d[:date] == dispute1.opened_at.in_time_zone(@user.time_zone).to_date }
     assert_not_nil day_data
@@ -65,7 +65,7 @@ class DailyVolumeReportTest < ActiveSupport::TestCase
 
   test "should respect user time zone" do
     charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
-    
+
     # Create dispute at a specific UTC time that might fall on different days in different time zones
     dispute = Dispute.create!(
       charge: charge,
@@ -83,4 +83,3 @@ class DailyVolumeReportTest < ActiveSupport::TestCase
     assert data.any? { |d| d[:date] == Date.new(2024, 1, 1) }
   end
 end
-

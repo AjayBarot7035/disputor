@@ -1,12 +1,12 @@
 class SessionsController < ApplicationController
-  skip_before_action :require_authentication, only: [:new, :create]
+  skip_before_action :require_authentication, only: [ :new, :create ]
 
   def new
   end
 
   def create
     user = User.find_by(email: params[:session][:email])
-    
+
     if user&.authenticate(params[:session][:password])
       session[:user_id] = user.id
       redirect_to root_url, notice: "Signed in successfully"
@@ -20,4 +20,3 @@ class SessionsController < ApplicationController
     redirect_to new_session_url, notice: "Signed out successfully"
   end
 end
-

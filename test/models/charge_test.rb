@@ -41,4 +41,3 @@ class ChargeTest < ActiveSupport::TestCase
     assert_includes charge.errors[:currency], "is not included in the list"
   end
 end
-

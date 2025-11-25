@@ -3,7 +3,7 @@ require "test_helper"
 class WebhooksControllerTest < ActionDispatch::IntegrationTest
   test "should accept dispute.opened event" do
     Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
-    
+
     assert_enqueued_with(job: ProcessWebhookEventJob) do
       post webhooks_disputes_path, params: {
         event_type: "dispute.opened",
@@ -19,7 +19,7 @@ class WebhooksControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :accepted
-    
+
     # Perform the job to actually create the dispute
     perform_enqueued_jobs
     assert_equal 1, Dispute.count
@@ -93,7 +93,7 @@ class WebhooksControllerTest < ActionDispatch::IntegrationTest
   test "should handle duplicate events idempotently" do
     Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
     event_id = "evt_123"
-    
+
     payload = {
       event_id: event_id,
       event_type: "dispute.opened",
@@ -122,4 +122,3 @@ class WebhooksControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Event already processed", JSON.parse(response.body)["message"]
   end
 end
-

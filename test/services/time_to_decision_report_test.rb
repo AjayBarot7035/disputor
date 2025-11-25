@@ -18,7 +18,7 @@ class TimeToDecisionReportTest < ActiveSupport::TestCase
       role: :admin,
       time_zone: "UTC"
     )
-    
+
     # Create disputes with different durations
     opened_at = 1.week.ago
     dispute1 = Dispute.create!(
@@ -59,7 +59,7 @@ class TimeToDecisionReportTest < ActiveSupport::TestCase
 
     assert data.is_a?(Array)
     assert data.length > 0
-    
+
     week_data = data.find { |d| d[:week] == opened_at.beginning_of_week }
     assert_not_nil week_data
     assert_equal 3, week_data[:count]
@@ -69,7 +69,7 @@ class TimeToDecisionReportTest < ActiveSupport::TestCase
 
   test "should only include closed disputes" do
     charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
-    
+
     # Create open dispute
     Dispute.create!(
       charge: charge,
@@ -87,4 +87,3 @@ class TimeToDecisionReportTest < ActiveSupport::TestCase
     assert data.all? { |d| d[:count] > 0 }
   end
 end
-

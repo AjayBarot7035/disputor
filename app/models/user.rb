@@ -17,4 +17,3 @@ class User < ApplicationRecord
     admin?
   end
 end
-

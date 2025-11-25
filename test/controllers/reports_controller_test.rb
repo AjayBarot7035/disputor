@@ -57,7 +57,7 @@ class ReportsControllerTest < ActionDispatch::IntegrationTest
 
     get reports_daily_volume_path(format: :json)
     assert_response :success
-    
+
     json = JSON.parse(response.body)
     assert json.key?("data")
     assert json["data"].is_a?(Array)
@@ -80,7 +80,7 @@ class ReportsControllerTest < ActionDispatch::IntegrationTest
 
   test "should calculate p50 and p90 for time to decision" do
     charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
-    
+
     # Create disputes with different durations
     10.times do |i|
       opened_at = (i + 1).weeks.ago
@@ -92,7 +92,7 @@ class ReportsControllerTest < ActionDispatch::IntegrationTest
         opened_at: opened_at,
         status: "awaiting_decision"
       )
-      
+
       # Close some disputes
       if i < 5
         dispute.update!(status: "won", closed_at: opened_at + (i + 1).days)
@@ -101,10 +101,9 @@ class ReportsControllerTest < ActionDispatch::IntegrationTest
 
     get reports_time_to_decision_path(format: :json)
     assert_response :success
-    
+
     json = JSON.parse(response.body)
     assert json.key?("data")
     assert json["data"].is_a?(Array)
   end
 end
-

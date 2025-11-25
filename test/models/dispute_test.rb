@@ -70,9 +70,9 @@ class DisputeTest < ActiveSupport::TestCase
     charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
     user = User.create!(email: "admin@example.com", password: "password123", role: :admin)
     dispute = Dispute.create!(charge: charge, external_id: "dsp_123", amount_cents: 1000, currency: "USD", opened_at: Time.current)
-    
+
     result = dispute.transition_to("needs_evidence", actor: user, note: "Need more evidence")
-    
+
     assert result
     assert dispute.needs_evidence?
   end
@@ -81,9 +81,9 @@ class DisputeTest < ActiveSupport::TestCase
     charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
     user = User.create!(email: "admin@example.com", password: "password123", role: :admin)
     dispute = Dispute.create!(charge: charge, external_id: "dsp_123", amount_cents: 1000, currency: "USD", opened_at: Time.current, status: "needs_evidence")
-    
+
     result = dispute.transition_to("awaiting_decision", actor: user, note: "Evidence collected")
-    
+
     assert result
     assert dispute.awaiting_decision?
   end
@@ -92,9 +92,9 @@ class DisputeTest < ActiveSupport::TestCase
     charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
     user = User.create!(email: "admin@example.com", password: "password123", role: :admin)
     dispute = Dispute.create!(charge: charge, external_id: "dsp_123", amount_cents: 1000, currency: "USD", opened_at: Time.current, status: "awaiting_decision")
-    
+
     result = dispute.transition_to("won", actor: user, note: "Dispute won")
-    
+
     assert result
     assert dispute.won?
   end
@@ -103,9 +103,9 @@ class DisputeTest < ActiveSupport::TestCase
     charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
     user = User.create!(email: "admin@example.com", password: "password123", role: :admin)
     dispute = Dispute.create!(charge: charge, external_id: "dsp_123", amount_cents: 1000, currency: "USD", opened_at: Time.current, status: "awaiting_decision")
-    
+
     result = dispute.transition_to("lost", actor: user, note: "Dispute lost")
-    
+
     assert result
     assert dispute.lost?
   end
@@ -114,9 +114,9 @@ class DisputeTest < ActiveSupport::TestCase
     charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
     user = User.create!(email: "admin@example.com", password: "password123", role: :admin)
     dispute = Dispute.create!(charge: charge, external_id: "dsp_123", amount_cents: 1000, currency: "USD", opened_at: Time.current)
-    
+
     result = dispute.transition_to("won", actor: user, note: "Invalid transition")
-    
+
     assert_not result
     assert dispute.open?
   end
@@ -125,9 +125,9 @@ class DisputeTest < ActiveSupport::TestCase
     charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
     user = User.create!(email: "admin@example.com", password: "password123", role: :admin)
     dispute = Dispute.create!(charge: charge, external_id: "dsp_123", amount_cents: 1000, currency: "USD", opened_at: Time.current, status: "awaiting_decision")
-    
+
     dispute.transition_to("won", actor: user, note: "Dispute won")
-    
+
     assert_not_nil dispute.closed_at
   end
 
@@ -135,9 +135,9 @@ class DisputeTest < ActiveSupport::TestCase
     charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
     user = User.create!(email: "admin@example.com", password: "password123", role: :admin)
     dispute = Dispute.create!(charge: charge, external_id: "dsp_123", amount_cents: 1000, currency: "USD", opened_at: Time.current, status: "awaiting_decision")
-    
+
     dispute.transition_to("lost", actor: user, note: "Dispute lost")
-    
+
     assert_not_nil dispute.closed_at
   end
 
@@ -146,9 +146,9 @@ class DisputeTest < ActiveSupport::TestCase
     user = User.create!(email: "admin@example.com", password: "password123", role: :admin)
     dispute = Dispute.create!(charge: charge, external_id: "dsp_123", amount_cents: 1000, currency: "USD", opened_at: Time.current, status: "awaiting_decision")
     dispute.transition_to("won", actor: user, note: "Dispute won")
-    
+
     result = dispute.reopen(actor: user, justification: "New evidence found")
-    
+
     assert result
     assert dispute.reopened?
   end
@@ -158,9 +158,9 @@ class DisputeTest < ActiveSupport::TestCase
     user = User.create!(email: "admin@example.com", password: "password123", role: :admin)
     dispute = Dispute.create!(charge: charge, external_id: "dsp_123", amount_cents: 1000, currency: "USD", opened_at: Time.current, status: "awaiting_decision")
     dispute.transition_to("lost", actor: user, note: "Dispute lost")
-    
+
     result = dispute.reopen(actor: user, justification: "Appeal filed")
-    
+
     assert result
     assert dispute.reopened?
   end
@@ -169,9 +169,9 @@ class DisputeTest < ActiveSupport::TestCase
     charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
     user = User.create!(email: "admin@example.com", password: "password123", role: :admin)
     dispute = Dispute.create!(charge: charge, external_id: "dsp_123", amount_cents: 1000, currency: "USD", opened_at: Time.current)
-    
+
     result = dispute.reopen(actor: user, justification: "Cannot reopen")
-    
+
     assert_not result
     assert dispute.open?
   end
@@ -180,11 +180,11 @@ class DisputeTest < ActiveSupport::TestCase
     charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
     user = User.create!(email: "admin@example.com", password: "password123", role: :admin)
     dispute = Dispute.create!(charge: charge, external_id: "dsp_123", amount_cents: 1000, currency: "USD", opened_at: Time.current)
-    
+
     assert_difference "CaseAction.count", 1 do
       dispute.transition_to("needs_evidence", actor: user, note: "Need more evidence")
     end
-    
+
     case_action = CaseAction.last
     assert_equal dispute, case_action.dispute
     assert_equal user, case_action.actor
@@ -195,9 +195,9 @@ class DisputeTest < ActiveSupport::TestCase
   test "should return valid transitions for open status" do
     charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
     dispute = Dispute.create!(charge: charge, external_id: "dsp_123", amount_cents: 1000, currency: "USD", opened_at: Time.current, status: "open")
-    
+
     valid_transitions = dispute.valid_transitions
-    
+
     assert_includes valid_transitions, "needs_evidence"
     assert_includes valid_transitions, "awaiting_decision"
     assert_not_includes valid_transitions, "won"
@@ -209,12 +209,11 @@ class DisputeTest < ActiveSupport::TestCase
     user = User.create!(email: "admin@example.com", password: "password123", role: :admin)
     dispute = Dispute.create!(charge: charge, external_id: "dsp_123", amount_cents: 1000, currency: "USD", opened_at: Time.current, status: "awaiting_decision")
     dispute.transition_to("won", actor: user, note: "Won")
-    
+
     valid_transitions = dispute.valid_transitions
-    
+
     assert_includes valid_transitions, "reopened"
     assert_not_includes valid_transitions, "needs_evidence"
     assert_not_includes valid_transitions, "awaiting_decision"
   end
 end
-

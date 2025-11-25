@@ -17,7 +17,7 @@ class AuthenticationTest < ActionDispatch::IntegrationTest
 
     post sessions_url, params: { session: { email: "admin@example.com", password: "password123" } }
     get root_url
-    
+
     assert_response :success
   end
 
@@ -31,9 +31,8 @@ class AuthenticationTest < ActionDispatch::IntegrationTest
 
     post sessions_url, params: { session: { email: "admin@example.com", password: "password123" } }
     get root_url
-    
+
     assert_response :success
     # current_user is available in views, test via controller instance
   end
 end
-

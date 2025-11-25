@@ -4,7 +4,7 @@ class EvidencesController < ApplicationController
   def create
     @evidence = @dispute.evidences.build(evidence_params)
     @evidence.metadata = { note: params[:evidence][:note] } if params[:evidence][:note].present?
-    
+
     if @evidence.save
       redirect_to @dispute, notice: "Evidence added successfully"
     else
@@ -23,4 +23,3 @@ class EvidencesController < ApplicationController
     params.require(:evidence).permit(:kind, :file)
   end
 end
-

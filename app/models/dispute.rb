@@ -21,21 +21,21 @@ class Dispute < ApplicationRecord
     return false unless valid_transition?(new_status)
 
     old_status = status
-    self.closed_at = Time.current if ["won", "lost"].include?(new_status)
+    self.closed_at = Time.current if [ "won", "lost" ].include?(new_status)
     update(status: new_status)
-    
+
     case_actions.create!(
       actor: actor,
       action: "status_transition",
       note: note,
       details: { from_status: old_status, to_status: new_status }.merge(details)
     )
-    
+
     true
   end
 
   def reopen(actor:, justification:)
-    return false unless ["won", "lost"].include?(status)
+    return false unless [ "won", "lost" ].include?(status)
 
     transition_to("reopened", actor: actor, note: "Dispute reopened: #{justification}")
   end
@@ -43,15 +43,15 @@ class Dispute < ApplicationRecord
   def valid_transitions
     case status
     when "open"
-      ["needs_evidence", "awaiting_decision"]
+      [ "needs_evidence", "awaiting_decision" ]
     when "needs_evidence"
-      ["awaiting_decision", "open"]
+      [ "awaiting_decision", "open" ]
     when "awaiting_decision"
-      ["won", "lost"]
+      [ "won", "lost" ]
     when "won", "lost"
-      ["reopened"]
+      [ "reopened" ]
     when "reopened"
-      ["needs_evidence", "awaiting_decision"]
+      [ "needs_evidence", "awaiting_decision" ]
     else
       []
     end

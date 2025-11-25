@@ -52,4 +52,3 @@ class ProcessWebhookEventJobTest < ActiveJob::TestCase
     end
   end
 end
-
