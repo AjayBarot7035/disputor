@@ -191,5 +191,30 @@ class DisputeTest < ActiveSupport::TestCase
     assert_equal "status_transition", case_action.action
     assert_equal "Need more evidence", case_action.note
   end
+
+  test "should return valid transitions for open status" do
+    charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
+    dispute = Dispute.create!(charge: charge, external_id: "dsp_123", amount_cents: 1000, currency: "USD", opened_at: Time.current, status: "open")
+    
+    valid_transitions = dispute.valid_transitions
+    
+    assert_includes valid_transitions, "needs_evidence"
+    assert_includes valid_transitions, "awaiting_decision"
+    assert_not_includes valid_transitions, "won"
+    assert_not_includes valid_transitions, "lost"
+  end
+
+  test "should return valid transitions for won/lost status" do
+    charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
+    user = User.create!(email: "admin@example.com", password: "password123", role: :admin)
+    dispute = Dispute.create!(charge: charge, external_id: "dsp_123", amount_cents: 1000, currency: "USD", opened_at: Time.current, status: "awaiting_decision")
+    dispute.transition_to("won", actor: user, note: "Won")
+    
+    valid_transitions = dispute.valid_transitions
+    
+    assert_includes valid_transitions, "reopened"
+    assert_not_includes valid_transitions, "needs_evidence"
+    assert_not_includes valid_transitions, "awaiting_decision"
+  end
 end
 
