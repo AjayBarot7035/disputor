@@ -175,5 +175,21 @@ class DisputeTest < ActiveSupport::TestCase
     assert_not result
     assert dispute.open?
   end
+
+  test "should create CaseAction when transitioning status" do
+    charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
+    user = User.create!(email: "admin@example.com", password: "password123", role: :admin)
+    dispute = Dispute.create!(charge: charge, external_id: "dsp_123", amount_cents: 1000, currency: "USD", opened_at: Time.current)
+    
+    assert_difference "CaseAction.count", 1 do
+      dispute.transition_to("needs_evidence", actor: user, note: "Need more evidence")
+    end
+    
+    case_action = CaseAction.last
+    assert_equal dispute, case_action.dispute
+    assert_equal user, case_action.actor
+    assert_equal "status_transition", case_action.action
+    assert_equal "Need more evidence", case_action.note
+  end
 end
 
