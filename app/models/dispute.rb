@@ -1,5 +1,6 @@
 class Dispute < ApplicationRecord
   belongs_to :charge
+  has_many :case_actions, dependent: :destroy
 
   enum :status, {
     open: "open",
@@ -21,6 +22,14 @@ class Dispute < ApplicationRecord
     old_status = status
     self.closed_at = Time.current if ["won", "lost"].include?(new_status)
     update(status: new_status)
+    
+    case_actions.create!(
+      actor: actor,
+      action: "status_transition",
+      note: note,
+      details: { from_status: old_status, to_status: new_status }.merge(details)
+    )
+    
     true
   end
 
