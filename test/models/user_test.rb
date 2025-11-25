@@ -28,5 +28,10 @@ class UserTest < ActiveSupport::TestCase
     assert_not user.valid?
     assert_includes user.errors[:password], "can't be blank"
   end
+
+  test "should have default role of read_only" do
+    user = User.create!(email: "test@example.com", password: "password123")
+    assert user.read_only?
+  end
 end
 
