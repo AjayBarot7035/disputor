@@ -34,7 +34,7 @@
           <span> | </span>
           <span>Signed in as <%= current_user.email %> (<%= current_user.role %>)</span>
           <span> | </span>
-          <%= link_to "Sign Out", session_path(current_user), data: { turbo_method: :delete } %>
+          <%= button_to "Sign Out", session_path(current_user), method: :delete, form: { style: "display: inline;" }, style: "background: none; border: none; color: #0000EE; text-decoration: underline; cursor: pointer; padding: 0; font: inherit;" %>
         <% else %>
           <span> | </span>
           <%= link_to "Sign In", new_session_path %>
