@@ -6,6 +6,11 @@ Please go through this [requirement.md](https://github.com/AjayBarot7035/disputo
 
 Please follow the [SETUP.md](https://github.com/AjayBarot7035/disputor/blob/main/SETUP.md) file for all the setup instructions(Only for macos users).
 
+## How to review the code, decisions and process
+
+Please review the codebase commit by commit starting with first [commit](https://github.com/AjayBarot7035/disputor/commit/3fbf58e5cf10bb0fa3108b139233e08773d83659).
+
+
 ## TODO tasks(future enhancements)
 1. Create setup instructions file for Linux and WSL users
 2. UI/UX improvements(table, sections, div, flash)
