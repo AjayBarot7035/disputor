@@ -33,5 +33,10 @@ class UserTest < ActiveSupport::TestCase
     user = User.create!(email: "test@example.com", password: "password123")
     assert user.read_only?
   end
+
+  test "should have default time_zone of UTC" do
+    user = User.create!(email: "test@example.com", password: "password123")
+    assert_equal "UTC", user.time_zone
+  end
 end
 
