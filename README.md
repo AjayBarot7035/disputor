@@ -161,3 +161,13 @@ bin/dev
 ```
 
 Then visit http://localhost:3000 and sign in with `admin@disputor.local` / `admin123`
+
+## TODO tasks
+1. Create setup instructions file for Linux and WSL users
+2. UI/UX improvements(table, sections, div, flash)
+3. Add the pagination with page size 10
+4. Add the rdoc documentation for all the ruby code
+5. Implement user management so we can easily onboard the user
+6. Investigate and replace sidekiq with Solidus if possible
+7. Investigate Turbo, Propshaft, Stimulus, Turbo frames as its available in 8.1.1
+8. Introduce tailwindcss-rails and move code according to it.
