@@ -2,6 +2,7 @@ module Authentication
   extend ActiveSupport::Concern
 
   included do
+    before_action :require_authentication
     helper_method :current_user, :signed_in?
   end
 
