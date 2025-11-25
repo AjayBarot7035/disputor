@@ -28,5 +28,17 @@ class ChargeTest < ActiveSupport::TestCase
     assert_not charge.valid?
     assert_includes charge.errors[:amount_cents], "must be greater than 0"
   end
+
+  test "should require currency" do
+    charge = Charge.new(external_id: "chg_123", amount_cents: 1000)
+    assert_not charge.valid?
+    assert_includes charge.errors[:currency], "can't be blank"
+  end
+
+  test "should only allow USD currency" do
+    charge = Charge.new(external_id: "chg_123", amount_cents: 1000, currency: "EUR")
+    assert_not charge.valid?
+    assert_includes charge.errors[:currency], "is not included in the list"
+  end
 end
 
