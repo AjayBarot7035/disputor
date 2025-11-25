@@ -16,5 +16,17 @@ class ChargeTest < ActiveSupport::TestCase
     assert_not charge.valid?
     assert_includes charge.errors[:external_id], "has already been taken"
   end
+
+  test "should require amount_cents" do
+    charge = Charge.new(external_id: "chg_123", currency: "USD")
+    assert_not charge.valid?
+    assert_includes charge.errors[:amount_cents], "can't be blank"
+  end
+
+  test "should require amount_cents to be greater than zero" do
+    charge = Charge.new(external_id: "chg_123", amount_cents: 0, currency: "USD")
+    assert_not charge.valid?
+    assert_includes charge.errors[:amount_cents], "must be greater than 0"
+  end
 end
 
