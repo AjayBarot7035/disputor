@@ -24,6 +24,12 @@ class Dispute < ApplicationRecord
     true
   end
 
+  def reopen(actor:, justification:)
+    return false unless ["won", "lost"].include?(status)
+
+    transition_to("reopened", actor: actor, note: "Dispute reopened: #{justification}")
+  end
+
   def valid_transition?(new_status)
     case status
     when "open"
@@ -32,6 +38,10 @@ class Dispute < ApplicationRecord
       ["awaiting_decision", "open"].include?(new_status)
     when "awaiting_decision"
       ["won", "lost"].include?(new_status)
+    when "won", "lost"
+      new_status == "reopened"
+    when "reopened"
+      ["needs_evidence", "awaiting_decision"].include?(new_status)
     else
       false
     end
