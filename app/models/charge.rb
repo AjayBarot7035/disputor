@@ -1,4 +1,4 @@
 class Charge < ApplicationRecord
-  validates :external_id, presence: true
+  validates :external_id, presence: true, uniqueness: true
 end
 
