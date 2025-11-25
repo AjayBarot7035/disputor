@@ -45,7 +45,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     post sessions_url, params: { session: { email: "admin@example.com", password: "password123" } }
     assert_equal user.id, session[:user_id]
 
-    delete session_url(user.id)
+    delete session_url(user)
     
     assert_redirected_to new_session_url
     assert_nil session[:user_id]

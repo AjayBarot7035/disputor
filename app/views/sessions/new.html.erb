@@ -1,0 +1,18 @@
+<h1>Sign In</h1>
+
+<%= form_with url: sessions_path, local: true do |form| %>
+  <div>
+    <%= form.label :email, "Email" %>
+    <%= form.email_field :email, name: "session[email]", required: true %>
+  </div>
+
+  <div>
+    <%= form.label :password, "Password" %>
+    <%= form.password_field :password, name: "session[password]", required: true %>
+  </div>
+
+  <div>
+    <%= form.submit "Sign In" %>
+  </div>
+<% end %>
+

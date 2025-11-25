@@ -13,6 +13,11 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
+  # Authentication routes
+  get "sign_in", to: "sessions#new", as: :new_session
+  post "sessions", to: "sessions#create", as: :sessions
+  delete "sessions/:id", to: "sessions#destroy", as: :session
+
   # Defines the root path route ("/")
-  # root "posts#index"
+  root "disputes#index"
 end
