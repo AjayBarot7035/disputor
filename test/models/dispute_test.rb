@@ -140,5 +140,40 @@ class DisputeTest < ActiveSupport::TestCase
     
     assert_not_nil dispute.closed_at
   end
+
+  test "should reopen dispute from won status" do
+    charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
+    user = User.create!(email: "admin@example.com", password: "password123", role: :admin)
+    dispute = Dispute.create!(charge: charge, external_id: "dsp_123", amount_cents: 1000, currency: "USD", opened_at: Time.current, status: "awaiting_decision")
+    dispute.transition_to("won", actor: user, note: "Dispute won")
+    
+    result = dispute.reopen(actor: user, justification: "New evidence found")
+    
+    assert result
+    assert dispute.reopened?
+  end
+
+  test "should reopen dispute from lost status" do
+    charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
+    user = User.create!(email: "admin@example.com", password: "password123", role: :admin)
+    dispute = Dispute.create!(charge: charge, external_id: "dsp_123", amount_cents: 1000, currency: "USD", opened_at: Time.current, status: "awaiting_decision")
+    dispute.transition_to("lost", actor: user, note: "Dispute lost")
+    
+    result = dispute.reopen(actor: user, justification: "Appeal filed")
+    
+    assert result
+    assert dispute.reopened?
+  end
+
+  test "should not reopen dispute from open status" do
+    charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
+    user = User.create!(email: "admin@example.com", password: "password123", role: :admin)
+    dispute = Dispute.create!(charge: charge, external_id: "dsp_123", amount_cents: 1000, currency: "USD", opened_at: Time.current)
+    
+    result = dispute.reopen(actor: user, justification: "Cannot reopen")
+    
+    assert_not result
+    assert dispute.open?
+  end
 end
 
