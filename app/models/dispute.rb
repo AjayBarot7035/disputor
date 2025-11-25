@@ -1,6 +1,7 @@
 class Dispute < ApplicationRecord
   belongs_to :charge
   has_many :case_actions, dependent: :destroy
+  has_many :evidences, dependent: :destroy
 
   enum :status, {
     open: "open",

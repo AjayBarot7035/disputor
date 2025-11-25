@@ -22,5 +22,18 @@ class EvidenceTest < ActiveSupport::TestCase
     
     assert evidence.file.attached?
   end
+
+  test "should store metadata in JSONB" do
+    charge = Charge.create!(external_id: "chg_123", amount_cents: 1000, currency: "USD")
+    dispute = Dispute.create!(charge: charge, external_id: "dsp_123", amount_cents: 1000, currency: "USD", opened_at: Time.current)
+    evidence = Evidence.create!(
+      dispute: dispute,
+      kind: "document",
+      metadata: { note: "Customer receipt", uploaded_by: "admin@example.com" }
+    )
+    
+    assert_equal "Customer receipt", evidence.metadata["note"]
+    assert_equal "admin@example.com", evidence.metadata["uploaded_by"]
+  end
 end
 
