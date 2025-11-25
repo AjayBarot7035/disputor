@@ -1,0 +1,112 @@
+<h1>Dispute: <%= @dispute.external_id %></h1>
+
+<div>
+  <strong>Status:</strong> <%= @dispute.status %><br>
+  <strong>Charge:</strong> <%= @dispute.charge.external_id %><br>
+  <strong>Amount:</strong> <%= number_to_currency(@dispute.amount_cents / 100.0) %><br>
+  <strong>Opened At:</strong> <%= @dispute.opened_at %><br>
+  <% if @dispute.closed_at %>
+    <strong>Closed At:</strong> <%= @dispute.closed_at %><br>
+  <% end %>
+</div>
+
+<h2>Status Transition</h2>
+<%= form_with model: @dispute, local: true do |form| %>
+  <% if @dispute.errors.any? %>
+    <div>
+      <ul>
+        <% @dispute.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :status, "New Status" %>
+    <%= form.select :status, options_for_select([
+      ["Open", "open"],
+      ["Needs Evidence", "needs_evidence"],
+      ["Awaiting Decision", "awaiting_decision"],
+      ["Won", "won"],
+      ["Lost", "lost"]
+    ], @dispute.status), {}, { disabled: !current_user.can_edit? } %>
+  </div>
+
+  <div>
+    <%= form.label :note, "Note" %>
+    <%= form.text_area :note, rows: 3, disabled: !current_user.can_edit? %>
+  </div>
+
+  <% if current_user.can_edit? %>
+    <div>
+      <%= form.submit "Update Status" %>
+    </div>
+  <% end %>
+<% end %>
+
+<h2>Evidence</h2>
+<% @dispute.evidences.each do |evidence| %>
+  <div>
+    <strong>Kind:</strong> <%= evidence.kind %><br>
+    <% if evidence.file.attached? %>
+      <strong>File:</strong> <%= link_to evidence.file.filename, rails_blob_path(evidence.file, disposition: "attachment") %><br>
+    <% end %>
+    <% if evidence.metadata.present? %>
+      <strong>Metadata:</strong> <%= evidence.metadata.to_json %><br>
+    <% end %>
+    <strong>Created:</strong> <%= evidence.created_at %><br>
+  </div>
+  <hr>
+<% end %>
+
+<h3>Add Evidence</h3>
+<%= form_with model: [@dispute, @dispute.evidences.build], local: true, url: dispute_evidences_path(@dispute) do |form| %>
+  <div>
+    <%= form.label :kind, "Kind" %>
+    <%= form.text_field :kind %>
+  </div>
+
+  <div>
+    <%= form.label :file, "File" %>
+    <%= form.file_field :file %>
+  </div>
+
+  <div>
+    <%= form.label :note, "Note" %>
+    <%= form.text_area :note, rows: 3 %>
+  </div>
+
+  <% if current_user.can_edit? %>
+    <div>
+      <%= form.submit "Add Evidence" %>
+    </div>
+  <% end %>
+<% end %>
+
+<h2>Case Actions (Audit Trail)</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Action</th>
+      <th>Actor</th>
+      <th>Note</th>
+      <th>Details</th>
+      <th>Created At</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @dispute.case_actions.order(created_at: :desc).each do |action| %>
+      <tr>
+        <td><%= action.action %></td>
+        <td><%= action.actor.email %></td>
+        <td><%= action.note %></td>
+        <td><%= action.details.to_json %></td>
+        <td><%= action.created_at %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to "Back to Queue", disputes_path %>
+

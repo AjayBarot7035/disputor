@@ -18,6 +18,11 @@ Rails.application.routes.draw do
   post "sessions", to: "sessions#create", as: :sessions
   delete "sessions/:id", to: "sessions#destroy", as: :session
 
+  # Disputes routes
+  resources :disputes, only: [:index, :show, :update] do
+    resources :evidences, only: [:create]
+  end
+
   # Defines the root path route ("/")
   root "disputes#index"
 end

@@ -1,2 +1,26 @@
-<h1>Disputes</h1>
+<h1>Dispute Review Queue</h1>
 
+<table>
+  <thead>
+    <tr>
+      <th>External ID</th>
+      <th>Charge</th>
+      <th>Status</th>
+      <th>Amount</th>
+      <th>Opened At</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @disputes.each do |dispute| %>
+      <tr>
+        <td><%= dispute.external_id %></td>
+        <td><%= dispute.charge.external_id %></td>
+        <td><%= dispute.status %></td>
+        <td><%= number_to_currency(dispute.amount_cents / 100.0) %></td>
+        <td><%= dispute.opened_at %></td>
+        <td><%= link_to "View", dispute_path(dispute) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

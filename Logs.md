@@ -26,3 +26,9 @@
 - Upgraded Ruby from 3.4.0dev to 3.4.7 (stable) - fixed ffi_c native extension issues
 - Verified Rails loads successfully with Sidekiq configured
 
+## Next Steps
+- Set up database and run migrations
+- Create models (Charge, Dispute, Evidence, CaseAction, User)
+- Implement authentication and RBAC
+- Build webhook endpoint and processor job
+
