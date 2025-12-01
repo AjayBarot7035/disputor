@@ -18,7 +18,7 @@ gem "bcrypt", "~> 3.1.7"
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
 # Use Sidekiq for background job processing (as per requirements)
-gem "sidekiq", "~> 7.0"
+gem "sidekiq", "~> 8.0"
 
 # Use Redis for caching and Sidekiq
 gem "redis", "~> 5.0"
